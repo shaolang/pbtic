@@ -9,7 +9,7 @@
     (filter #(= (month-day (:date-of-birth %)) md) people)))
 
 
-(defn- filter-dob [people month day]
+(defn  filter-dob [people month day]
   (filter #(= (month-day (:date-of-birth %)) [month day]) people))
 
 
