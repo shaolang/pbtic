@@ -94,6 +94,21 @@
      :prices          prices
      :specials        specials}))
 
+
+(def gen-lax-lists
+  (gen/hash-map
+   :items   (gen/list gen/string-alphanumeric)
+   :prices  (gen/fmap #(into {} %) (gen/list (gen/tuple gen/string-alphanumeric
+                                                        gen/nat)))
+   :specials (gen/fmap (fn [vs]
+                        (->> vs
+                             (map (fn [[item count price]] {item {:count count
+                                                                  :price price}}))
+                             (apply merge)))
+                       (gen/list (gen/tuple gen/string-alphanumeric
+                                            gen/nat
+                                            gen/nat)))))
+
 ;;;;;;;;;;;;;
 ;; propreties
 
@@ -107,3 +122,11 @@
   (for-all [{:keys [items expected-price prices specials]} gen-item-price-special]
     (= expected-price
        (checkout/total items prices specials))))
+
+
+(defspec negative-testing-for-expected-results
+  (for-all [{:keys [items prices specials]} gen-lax-lists]
+    (try
+      (integer? (checkout/total items prices specials))
+      (catch Throwable ex
+        (contains? (ex-data ex) :unknown-item)))))

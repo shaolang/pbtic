@@ -1,8 +1,14 @@
 (ns pbtic.checkout)
 
 
+(defn cost-of-item [prices item]
+  (if-let [price (get prices item)]
+    price
+    (throw (ex-info "unknown-item" {:unknown-item item}))))
+
+
 (defn apply-regular [items prices]
-  (transduce (map (fn [[item count]] (* count (get prices item))))
+  (transduce (map (fn [[item count]] (* count (cost-of-item prices item))))
              +
              0
              items))
