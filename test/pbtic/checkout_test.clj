@@ -96,18 +96,21 @@
 
 
 (def gen-lax-lists
-  (gen/hash-map
-   :items   (gen/list gen/string-alphanumeric)
-   :prices  (gen/fmap #(into {} %) (gen/list (gen/tuple gen/string-alphanumeric
-                                                        gen/nat)))
-   :specials (gen/fmap (fn [vs]
-                        (->> vs
-                             (map (fn [[item count price]] {item {:count count
-                                                                  :price price}}))
-                             (apply merge)))
-                       (gen/list (gen/tuple gen/string-alphanumeric
-                                            gen/nat
-                                            gen/nat)))))
+  (let [known-items ["A", "B", "C"]
+        gen-maybe-known (gen/bind (gen/list gen-non-empty-string)
+                                  #(gen/elements (concat known-items %)))]
+    (gen/hash-map
+     :items   (gen/list gen-maybe-known)
+     :prices  (gen/fmap #(into {} %) (gen/list (gen/tuple gen-maybe-known
+                                                          gen/nat)))
+     :specials (gen/fmap (fn [vs]
+                           (->> vs
+                                (map (fn [[item count price]]
+                                       {item {:count count :price price}}))
+                                (apply merge)))
+                         (gen/list (gen/tuple gen-maybe-known
+                                              gen/nat
+                                              gen/nat))))))
 
 ;;;;;;;;;;;;;
 ;; propreties
@@ -129,4 +132,5 @@
     (try
       (integer? (checkout/total items prices specials))
       (catch Throwable ex
-        (contains? (ex-data ex) :unknown-item)))))
+        (or (contains? (ex-data ex) :unknown-item)
+            (contains? (ex-data ex) :invalid-special-list))))))

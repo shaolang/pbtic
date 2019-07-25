@@ -33,8 +33,13 @@
 
 (def count-seen frequencies)
 
+(defn valid-special-list? [specials]
+  (every? #(pos? (:count %)) (vals specials)))
+
 
 (defn total [item-list price-list specials]
+  (when-not (valid-special-list? specials)
+    (throw (ex-info "invalid special list" {:invalid-special-list true})))
   (let [counts (count-seen item-list)
         {:keys [counts-left prices]} (apply-specials counts specials)]
     (+ prices (apply-regular counts-left price-list))))
