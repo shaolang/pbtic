@@ -1,5 +1,4 @@
-(ns pbtic.birthday.mail-tpl
-  (:require [clojure.string :as str]))
+(ns pbtic.birthday.mail-tpl)
 
 (defn body [{:keys [first-name]}]
   (format "Happy birthday, dear %s!" first-name))
