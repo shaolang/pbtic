@@ -1,4 +1,5 @@
-(ns pbtic.cache)
+(ns pbtic.cache
+  (:refer-clojure :exclude [find]))
 
 (def ^:private *ets (atom nil))
 
