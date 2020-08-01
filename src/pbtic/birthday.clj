@@ -1,6 +1,5 @@
 (ns pbtic.birthday
-  (:require [pbtic.birthday.csv :as csv]
-            [pbtic.birthday.employee :as employee]
+  (:require [pbtic.birthday.employee :as employee]
             [pbtic.birthday.mail-tpl :as mail-tpl])
   (:import [java.time LocalDate]))
 

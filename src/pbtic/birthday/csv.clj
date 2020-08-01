@@ -1,6 +1,5 @@
 (ns pbtic.birthday.csv
-  (:require [clojure.data.csv :as csv]
-            [clojure.string :as str]))
+  (:require [clojure.data.csv :as csv]))
 
 (defn encode [ms]
   (let [ks    (-> ms first keys)
