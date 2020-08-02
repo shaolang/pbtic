@@ -8,10 +8,9 @@
 
 
 (defn- find* [k]
-  (when-let [[rec] (filter (fn [[_index tuple]]
-                             (and (vector? tuple) (= k (first tuple))))
-                           @*ets)]
-    rec))
+  (->> @*ets
+       (filter (fn [[_index tuple]] (and (vector? tuple) (= k (first tuple)))))
+       first))
 
 
 (defn find [k]
