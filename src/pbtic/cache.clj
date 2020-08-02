@@ -21,9 +21,7 @@
 (defn cache! [k v]
   (if-let [[i] (find* k)]
     (swap! *ets assoc i [k v])
-    (let [new-index (if (= (:index @*ets) (:max-items @*ets))
-                      1
-                      (inc (:index @*ets)))]
+    (let [new-index (inc (mod (:index @*ets) (:max-items @*ets)))]
       (swap! *ets assoc new-index [k v] :index new-index))))
 
 
