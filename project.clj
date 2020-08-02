@@ -7,4 +7,4 @@
   :dependencies [[org.clojars.czan/stateful-check   "0.4.2"]
                  [org.clojure/clojure               "1.10.1"]
                  [org.clojure/data.csv              "1.0.0"]
-                 [org.clojure/test.check            "1.0.0"]])
+                 [org.clojure/test.check            "1.1.0"]])
