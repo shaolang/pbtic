@@ -36,11 +36,14 @@
                     (zero? (count next-state)))})
 
 (def cache-specification
-  {:commands      {:flush!    #'flush-command
-                   :find      #'find-command
-                   :cache!    #'cache-command}
-   :initial-state (constantly [])
-   :setup         #(c/init! cache-size)})
+  {:commands          {:flush!    #'flush-command
+                       :find      #'find-command
+                       :cache!    #'cache-command}
+   :generate-command  (fn [_] (gen/frequency [[1 (gen/return :cache!)]
+                                              [3 (gen/return :find)]
+                                              [1 (gen/return :flush!)]]))
+   :initial-state     (constantly [])
+   :setup             #(c/init! cache-size)})
 
 (deftest cache-specification-test
   (is (specification-correct? cache-specification)))
