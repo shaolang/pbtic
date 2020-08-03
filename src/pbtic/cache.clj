@@ -8,9 +8,8 @@
 
 
 (defn- find* [k]
-  (->> @*ets
-       (filter (fn [[_index tuple]] (and (vector? tuple) (= k (first tuple)))))
-       first))
+  (some (fn [[i vs :as entry]] (when (and (vector? vs) (= k (first vs))) entry))
+        @*ets))
 
 
 (defn find [k]
