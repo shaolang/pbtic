@@ -47,3 +47,8 @@
 
 (deftest cache-specification-test
   (is (specification-correct? cache-specification)))
+
+
+(deftest cache-specification-parallel-test
+  (is (specification-correct? cache-specification {:gen {:threads 2}
+                                                   :max {:tries 100}})))
